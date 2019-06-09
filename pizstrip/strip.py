@@ -26,7 +26,8 @@ def make_strip(cfg, led_count):
             cfg.getint("general", "led_dma"),
             cfg.getboolean("general", "led_invert"),
             cfg.getint("general", "brightness"),
-            cfg.getint("general", "led_channel")
+            cfg.getint("general", "led_channel"),
+            np.ws.WS2811_STRIP_GRB
         )
     else:
         ret = NoStrip(led_count, size_x=32, size_y=9)
