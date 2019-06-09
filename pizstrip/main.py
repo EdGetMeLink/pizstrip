@@ -102,7 +102,7 @@ def start():
 
     while runner.isAlive():
         try:
-            pass
+            time.sleep(1)
         except (KeyboardInterrupt, SystemExit):
             LOG.info("Stopped by Keyboard or System Exit")
             runner.exitflag = True
