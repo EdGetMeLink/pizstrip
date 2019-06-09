@@ -64,7 +64,7 @@ def start_runner(queue, cfg):
     return runner
 
 
-def convert_to_color(rgb, color: Color):
+def convert_to_color(rgb, color):
     '''
     convert from RGB to Color
     '''
