@@ -14,10 +14,10 @@ setup(
     include_package_data=True,
     license="Private",
     install_requires=[
-        'config-resolver',
+        'config-resolver >4.0.0, <5.0.0',
         'requests',
         'python-dateutil',
-        'rpi_ws281x; platform_system == "Linux"',
+        'rpi_ws281x >4.0.0, <5.0.0; platform_system == "Linux"',
         'paho-mqtt',
     ],
     entry_points={
