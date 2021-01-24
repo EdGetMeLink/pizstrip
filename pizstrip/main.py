@@ -100,7 +100,8 @@ def start():
 
     color = get_color_class()
 
-    while runner.isAlive():
+    
+    while runner.is_alive():
         try:
             time.sleep(1)
         except (KeyboardInterrupt, SystemExit):
