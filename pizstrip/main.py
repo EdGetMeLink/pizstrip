@@ -101,17 +101,12 @@ def start():
     color = get_color_class()
     alive_timer = 10
     timer = 0
-    count = 0
     mqttc.publish(mqttc.config["alive_topic"], mqttc.config["alive_message"])
 
     while runner.is_alive():
         try:
             time.sleep(1)
             if timer == alive_timer:
-                count +=1
-                if count == 3:
-                    raise ValueError
-                timer = 0
                 mqttc.publish(
                     mqttc.config["alive_topic"], mqttc.config["alive_message"]
                 )
