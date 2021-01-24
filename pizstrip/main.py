@@ -101,14 +101,14 @@ def start():
     color = get_color_class()
     alive_timer = 10
     timer = 0
-    mqttc.publish(mqttc.config["alive_topic"], mqttc.config["alive_message"])
+    mqttc.publish(mqttc.config["alive_topic"], cfg.get("mqtt", "alive_message"))
 
     while runner.is_alive():
         try:
             time.sleep(1)
             if timer == alive_timer:
                 mqttc.publish(
-                    mqttc.config["alive_topic"], mqttc.config["alive_message"]
+                    mqttc.config["alive_topic"], cfg.get("mqtt", "alive_message")
                 )
             else:
                 timer += 1
@@ -119,7 +119,7 @@ def start():
             mqttc.will_clear()
             mqttc.publish(
                 mqttc.config["alive_topic"], 
-                mqttc.config["dead_message"])
+                cfg.get("mqtt", "dead_message"))
             mqttc.loop_stop()
         except Exception:
             LOG.exception("Exception caused crash")
@@ -128,7 +128,7 @@ def start():
             mqttc.will_clear()
             mqttc.publish(
                 mqttc.config["alive_topic"], 
-                mqttc.config["dead_message"])
+                cfg.get("mqtt", "dead_message"))
             mqttc.loop_stop()
             raise
 
