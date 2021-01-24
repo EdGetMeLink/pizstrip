@@ -10,4 +10,8 @@ led_channel=0
 [mqtt]
 server=mqtt.server
 port=1883
-color_topic=pizstrip/color
+client_name=pizstrip
+color_topic=color
+alive_topic=alive
+alive_message=ON
+dead_message=OFF

@@ -1,7 +1,7 @@
-'''
+"""
 file : main.py
 contains the entriepoint for pizstrip
-'''
+"""
 import logging
 import logging.handlers
 import time
@@ -20,19 +20,20 @@ LOG = logging.getLogger(__name__)
 
 
 def setup_logging():  # pragma:no cover
-    '''
+    """
     setup logging
-    '''
+    """
     log_file = "pizstrip.log"
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.DEBUG)
 
     formatter = ColorFormatter(
-        '%(asctime)s - %(name)s - %(threadName)s - %(levelname)s - %(message)s')
+        "%(asctime)s - %(name)s - %(threadName)s - %(levelname)s - %(message)s"
+    )
 
-    file_handler = logging.handlers.RotatingFileHandler(log_file,
-                                                        maxBytes=1024*1024,
-                                                        backupCount=5)
+    file_handler = logging.handlers.RotatingFileHandler(
+        log_file, maxBytes=1024 * 1024, backupCount=5
+    )
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(formatter)
     console_handler = logging.StreamHandler()
@@ -65,28 +66,27 @@ def start_runner(queue, cfg):
 
 
 def convert_to_color(rgb, color):
-    '''
+    """
     convert from RGB to Color
-    '''
+    """
     return color(rgb.red, rgb.green, rgb.blue)
 
 
 def get_strip(queue, old_mode, old_params):
-    '''
+    """
     check mqqueue and return strip
-    '''
+    """
     data = check_mqqueue(queue)
     if data:
-        mode = data.get('mode', old_mode)
-        params = data.get('params', old_params)
+        mode = data.get("mode", old_mode)
+        params = data.get("params", old_params)
     else:
         mode = old_mode
         params = old_params
     color = get_color_class()
 
-    strip = ''
+    strip = ""
     return strip
-
 
 
 def start():
@@ -99,20 +99,41 @@ def start():
     mqttc.loop_start()
 
     color = get_color_class()
+    alive_timer = 10
+    timer = 0
+    count = 0
+    mqttc.publish(mqttc.config["alive_topic"], mqttc.config["alive_message"])
 
-    
     while runner.is_alive():
         try:
             time.sleep(1)
+            if timer == alive_timer:
+                count +=1
+                if count == 3:
+                    raise ValueError
+                timer = 0
+                mqttc.publish(
+                    mqttc.config["alive_topic"], mqttc.config["alive_message"]
+                )
+            else:
+                timer += 1
         except (KeyboardInterrupt, SystemExit):
             LOG.info("Stopped by Keyboard or System Exit")
             runner.exitflag = True
             runner.join()
+            mqttc.will_clear()
+            mqttc.publish(
+                mqttc.config["alive_topic"], 
+                mqttc.config["dead_message"])
             mqttc.loop_stop()
         except Exception:
             LOG.exception("Exception caused crash")
             runner.exitflag = True
             runner.join()
+            mqttc.will_clear()
+            mqttc.publish(
+                mqttc.config["alive_topic"], 
+                mqttc.config["dead_message"])
             mqttc.loop_stop()
             raise
 

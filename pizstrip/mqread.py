@@ -92,7 +92,9 @@ def setup_mqtt(cfg, queue):  # pragma: no cover # TODO: write test
         mqtt_conf = load_mqtt_settings(cfg)
         mqttc = mqtt.Client()
         mqttc.on_message = on_msg
+        mqttc.will_set(mqtt_conf["alive_topic"], mqtt_conf["dead_message"], 1)
         mqttc.connect(mqtt_conf["server"], mqtt_conf["port"], 60)
+
 
         mqttc.message_callback_add(mqtt_conf["color_topic"], color_topic)
         mqttc.subscribe(mqtt_conf["color_topic"], 0)
