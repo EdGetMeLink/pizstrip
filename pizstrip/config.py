@@ -11,8 +11,7 @@ def load_config(filename='app.ini', lookup_options=[]):
     '''
     load app config
     '''
-    return get_config(
-        'mds', 'pizstrip', filename=filename,
+    return get_config("", 'pizstrip', filename=filename,
         lookup_options=lookup_options).config
 
 
