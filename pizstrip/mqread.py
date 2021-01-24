@@ -51,7 +51,7 @@ def message_decoder(msg: str) -> RGB:
     decode incomming message to RGB Color
     """
     red, green, blue = msg.split(",")
-    return RGB(red, green, blue)
+    return RGB(int(red), int(green), int(blue))
 
 
 def color_topic(mqttc, obj, msg):
